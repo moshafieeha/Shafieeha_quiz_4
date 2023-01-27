@@ -1,6 +1,19 @@
 const tableHead = document.querySelector('thead');
 const tableBody = document.querySelector('tbody');
 
+const removeFields = (fields) => {
+  fields.forEach(field => {
+    const th = tableHead.querySelector(`th:contains(${field})`);
+    th.remove();
+  });
+  Array.from(tableBody.querySelectorAll('tr')).forEach(tr => {
+    fields.forEach(field => {
+      const td = tr.querySelector(`td:contains(${field})`);
+      td.remove();
+    });
+  });
+};
+
 const renderTable = () => {
 	tableHead.innerHTML = `
 		<tr>
@@ -35,5 +48,13 @@ const renderTable = () => {
 		rowCount += 1;
 	}
 };
+
+const currentUrl = new URL(window.location.href);
+const fields = currentUrl.searchParams.get("fields");
+
+if (fields) {
+  const fieldsToRemove = fields.split(",");
+  removeFields(fieldsToRemove);
+}
 
 renderTable();
